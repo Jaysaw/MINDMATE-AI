@@ -3,21 +3,50 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-export const getEmotionalSupport = async (message: string): Promise<string> => {
+interface GeminiConfig {
+  temperature?: number;
+  maxOutputTokens?: number;
+}
+
+const isEmotionalSupportDomain = (message: string): boolean => {
+  const nonEmotionalKeywords = [
+    'buy', 'sell', 'purchase', 'price', 'cost', 'shopping', 'market',
+    'business', 'investment', 'trading', 'stock', 'crypto', 'bitcoin',
+    'advertisement', 'promotion', 'deal', 'offer', 'discount'
+  ];
+  
+  const lowerMessage = message.toLowerCase();
+  return !nonEmotionalKeywords.some(keyword => lowerMessage.includes(keyword));
+};
+
+export const getEmotionalSupport = async (
+  message: string,
+  config: GeminiConfig = {}
+): Promise<string> => {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Validate if the message is within emotional support domain
+    if (!isEmotionalSupportDomain(message)) {
+      return "<p>I'm sorry, but I'm designed specifically to provide emotional support and mental well-being guidance. I can't assist with commercial, financial, or other non-emotional support matters. Please feel free to share your feelings, thoughts, or emotional concerns instead. 💙</p>";
+    }
+
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      generationConfig: {
+        temperature: config.temperature ?? 0.3, // Lower default temperature for more focused responses
+        maxOutputTokens: config.maxOutputTokens ?? 500, // Lower default tokens for more concise responses
+      }
+    });
     
     const prompt = `You are an empathetic AI assistant providing emotional support with a friendly personality. 
+    Your responses should be focused, supportive, and directly address emotional needs.
     Use emojis in your responses to make them more engaging and warm.
-    Keep responses concise (5-6 lines) and use HTML tags for formatting:
+    Keep responses concise (3-4 lines) and use HTML tags for formatting:
     - Use <h3> for main points
     - Use <p> for paragraphs
     - Use <ul> and <li> for lists
     - Use <br> for line breaks
     - Use <strong> for emphasis
     - Use <em> for gentle emphasis
-    - Use <table> for structured information
-    - Use <ol> for numbered steps
     
     Here's the message: ${message}`;
 

@@ -1,0 +1,76 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.settings-button:hover {
+  background-color: var(--hover-color);
+}
+
+.settings-panel {
+  position: absolute;
+  top: 100%;
+  right: 1rem;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  z-index: 100;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 250px;
+}
+
+.setting-item {
+  margin-bottom: 1rem;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.setting-item input[type="range"] {
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.setting-item small {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+/* Dark mode styles */
+.dark .settings-panel {
+  background-color: #1a1a1a;
+  border-color: #333;
+}
+
+.dark .settings-button:hover {
+  background-color: #333;
+}
+
+.dark .setting-item small {
+  color: #888;
+} 
